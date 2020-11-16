@@ -1,16 +1,10 @@
 {
   "hosting": {
-    "public": "lechat",
+    "public": "dist/lechat-15f79",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
     ]
   }
 }
