@@ -8,9 +8,11 @@
       <ng-container *ngIf="userId">
         <a class="item" mat-list-item routerLinkActive="active" (click)=goto(room.id) *ngFor="let room of roomList;let recordIndex = index">
           <div class="roomblock">
-            <ng-container *ngIf="room !==undefined && lastMessages[recordIndex] !==undefined">
+            <ng-container *ngIf="room.data !==undefined ">
               <div class="roomTitle">{{room.data.roomId}}</div>
-              <div>{{lastMessages[recordIndex].data.userId}}：{{lastMessages[recordIndex].data.message}}</div>
+              <div  *ngIf="room.data.latest ">{{room.data.latest.data.userId}}:{{room.data.latest.data.message}}</div>
+              <div  *ngIf="room.data.latest ">{{room.data.latest.data.time}}</div>
+
             </ng-container>
           </div>
         </a>

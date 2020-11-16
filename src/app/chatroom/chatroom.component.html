@@ -44,7 +44,7 @@
       class="nameinput"
       placeholder="Enter your name"
     > -->
-    <input [(ngModel)]="message"  class="input" (keypress.enter)="sendMessage()">
+    <input [(ngModel)]="message"  class="input" (keydown.enter)="sendMessage()">
     <button
       *ngIf="message.length >0 ;else elseTmpl"
       class="send"

@@ -77,8 +77,6 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
       .ref('rooms/')
       .on('value', (snapshot) => {
         this.roomList = this.loader(snapshot);
-        console.log(this.roomList);
-        // this.roomList.forEach((ele) => this.onLastMessage(ele.data.roomId));
       });
   }
 

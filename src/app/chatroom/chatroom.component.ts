@@ -125,6 +125,11 @@ export class ChatroomComponent implements OnInit {
         message,
         time,
       });
-
+      this.updateLatestMes();
+  }
+  updateLatestMes() {
+    const updates = {};
+    updates['rooms/' + this.id + '/latest/'] = this.allMessages[this.allMessages.length - 1];
+    firebase.database().ref().update(updates);
   }
 }

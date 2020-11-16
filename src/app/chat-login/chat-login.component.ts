@@ -19,10 +19,10 @@ export class ChatLoginComponent implements OnInit {
       userId: '',
       password: '',
     });
-    this.myForm.valueChanges.subscribe((x) => {
-      console.log('form value changed');
-      console.log(x);
-    });
+    // this.myForm.valueChanges.subscribe((x) => {
+    //   console.log('form value changed');
+    //   console.log(x);
+    // });
   }
   enter(): void{
     this.logIn = true;
