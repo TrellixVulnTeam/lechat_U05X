@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "lechat-15f79": {
+      "hosting": {
+        "agularChat": [
+          "lechat-15f79"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "lechat-15f79"
+  }
+}

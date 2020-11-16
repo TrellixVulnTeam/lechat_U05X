@@ -1,0 +1,35 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar routerLink="/" routerLinkActive="active"> Chatroom</mat-toolbar>
+    <mat-nav-list>
+      <ng-container *ngIf="userId">
+        <a class="item" mat-list-item routerLinkActive="active" (click)=goto(room.id) *ngFor="let room of roomList;let recordIndex = index">
+          <div class="roomblock">
+            <ng-container *ngIf="room !==undefined && lastMessages[recordIndex] !==undefined">
+              <div class="roomTitle">{{room.data.roomId}}</div>
+              <div>{{lastMessages[recordIndex].data.userId}}：{{lastMessages[recordIndex].data.message}}</div>
+            </ng-container>
+          </div>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span><ng-container *ngIf="userId">Welcome back, {{userId}} @  </ng-container>
+      {{currentPage}}</span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
