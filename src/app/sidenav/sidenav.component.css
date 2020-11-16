@@ -1,0 +1,31 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.item{
+
+}
+
+.roomblock{
+  display: flex;
+  flex-direction: column;
+}
+
+.roomTitle{
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}

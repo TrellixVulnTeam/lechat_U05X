@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="chatroom">
+    <div
+      *ngFor="let message of allMessages"
+      [class]="{messages:true,messageme:message.data.userId===userId}"
+    >
+      <div
+        *ngIf="message.data.userId===userId; else elseTmpl"
+        class="messageblock"
+      >
+
+        <div>
+          <div class="messageme__text"> {{message.data.message}}</div>
+          <!-- <div class="messageme__time">{{message[1].time}}</div> -->
+        </div>
+        <!-- <img
+          class="profile"
+          :src="url"
+        > -->
+
+      </div>
+      <ng-template #elseTmpl>
+      <div
+        class="message"
+      >
+        <img
+          class="profile"
+          [src]="url"
+        >
+        <div>
+          {{message.data.userId}} <div class="message__text">{{message.data.message}}</div>
+          <!-- <div class="message__time">{{message[1].time}}</div> -->
+        </div>
+
+      </div>
+     </ng-template>
+
+    </div>
+
+  </div>
+  <div class="footer" *ngIf="userId">
+    <!-- <input
+      v-model="userId"
+      class="nameinput"
+      placeholder="Enter your name"
+    > -->
+    <input [(ngModel)]="message"  class="input" (keypress.enter)="sendMessage()">
+    <button
+      *ngIf="message.length >0 ;else elseTmpl"
+      class="send"
+      (click)="sendMessage()"
+    >send</button>
+    <ng-template #elseTmpl>
+
+    <button
+      class="send thumb"
+      (click)="sendMessage('👍')"
+    >
+      👍
+    </button>
+    </ng-template>
+  </div>
+
+</div>
