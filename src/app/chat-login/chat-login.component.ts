@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {Observable} from 'rxjs';
 import { CommuteService } from './../commute.service';
+import 'firebase/auth';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-chat-login',
@@ -11,7 +13,7 @@ import { CommuteService } from './../commute.service';
 export class ChatLoginComponent implements OnInit {
   myForm: FormGroup;
   logIn = false;
-  constructor(private fb: FormBuilder,    private commuteService: CommuteService    ) {}
+  constructor(private fb: FormBuilder,    private commuteService: CommuteService ,public authService: AuthService   ) {}
 
   ngOnInit(): void {
     this.myForm = this.fb.group({
@@ -26,10 +28,14 @@ export class ChatLoginComponent implements OnInit {
   }
   enter(): void{
     this.logIn = true;
-    this.sendCommute(this.myForm.value.userId);
+    this.authService.login().subscribe(() => {
+      if (this.authService.isLoggedIn) {
+        this.sendCommute(this.myForm.value.userId);
+      }
+    });
   }
   logOut(): void {
-    this.logIn = false;
+    this.authService.logout();
     this.clearCommute();
   }
   sendCommute(mess): void {
@@ -41,4 +47,5 @@ export class ChatLoginComponent implements OnInit {
     // clear messages
     this.commuteService.clearMessages();
   }
+
 }

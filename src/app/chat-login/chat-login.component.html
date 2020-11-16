@@ -1,6 +1,6 @@
 <div class="container">
   <div class="chatblock">
-    <ng-container [formGroup]="myForm" *ngIf="!logIn;else elseTmpl" >
+    <ng-container [formGroup]="myForm" *ngIf="!authService.isLoggedIn;else elseTmpl" >
     <!-- <label class="input-sizer"
       ><span>Room ID</span>
       <input formControlName="roomId" placeholder="Type in your roomId"

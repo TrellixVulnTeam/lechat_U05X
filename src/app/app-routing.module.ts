@@ -3,10 +3,12 @@ import { ChatroomComponent } from './chatroom/chatroom.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: '', component: ChatLoginComponent },
-  { path: 'room', component: ChatroomComponent },
+  { path: 'room', component: ChatroomComponent,
+    canActivate: [AuthGuard], },
 
 ];
 
