@@ -23,6 +23,10 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AuthService } from './auth/auth.service';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,12 +44,13 @@ import 'firebase/database';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireModule.initializeApp(environment.firebase, "angular-auth-firebase"),
     AngularFireDatabaseModule,
+    AngularFireAuthModule,
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

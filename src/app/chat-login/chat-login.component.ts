@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {Observable} from 'rxjs';
 import { CommuteService } from './../commute.service';
-import 'firebase/auth';
 import { AuthService } from '../auth/auth.service';
-
 @Component({
   selector: 'app-chat-login',
   templateUrl: './chat-login.component.html',
@@ -12,10 +10,14 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ChatLoginComponent implements OnInit {
   myForm: FormGroup;
-  logIn = false;
-  constructor(private fb: FormBuilder,    private commuteService: CommuteService ,public authService: AuthService   ) {}
+  constructor(private fb: FormBuilder,    private commuteService: CommuteService , public authService: AuthService   ) {}
 
   ngOnInit(): void {
+    // const uiConfig ={
+    //   signInOptions:[
+    //     firebase.auth.GoogleAuthProvider
+    //   ]
+    // }
     this.myForm = this.fb.group({
       roomId: '',
       userId: '',
@@ -26,16 +28,18 @@ export class ChatLoginComponent implements OnInit {
     //   console.log(x);
     // });
   }
-  enter(): void{
-    this.logIn = true;
-    this.authService.login().subscribe(() => {
-      if (this.authService.isLoggedIn) {
-        this.sendCommute(this.myForm.value.userId);
-      }
-    });
+  // enter(): void{
+  //   this.authService.loginWithGoogle(this.myForm.value.userId);
+  //   // this.authService.login(this.myForm.value.userId, this.myForm.value.password).subscribe(() => {
+
+  //   // });
+  // }
+  loginWithG(){
+    this.authService.loginWithGoogle();
   }
   logOut(): void {
     this.authService.logout();
+    console.log("login", this.authService.isLoggedIn);
     this.clearCommute();
   }
   sendCommute(mess): void {

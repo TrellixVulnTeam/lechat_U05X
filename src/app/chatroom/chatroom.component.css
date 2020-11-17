@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100vh;
+
 }
 .chatroom {
   display: flex;
@@ -9,6 +11,7 @@
   height: 85vh;
   overflow-x: hidden;
   overflow-y: scroll;
+  /* -webkit-overflow-scrolling: touch */
 }
 .messages {
   display: flex;
@@ -55,7 +58,7 @@
 .footer {
   width: 100%;
   position: absolute;
-  bottom: 2vh;
+  bottom: 1vh;
   display: flex;
   flex: 1;
   min-height: 6vh;
@@ -85,4 +88,7 @@
   background: none;
   flex: 1;
   font-size: 3vh;
+}
+@media screen and (device-aspect-ratio: 375/667) {
+  select, textarea, input{ font-size: 16px; }
 }

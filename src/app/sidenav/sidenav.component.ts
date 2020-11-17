@@ -23,6 +23,7 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
   roomList: IDBRoom[] = [];
   lastMessages: IDBMessage[] = [];
   roomId: string;
+  roomIdName: string;
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(
@@ -94,7 +95,7 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
   //     });
   // }
 
-  loader(snapshot) {
+  loader(snapshot): IDBRoom[] {
     const data: IDBRoom = snapshot.val() || 'Anonymous';
     const holder: IDBRoom[] = [];
     for (const i in data) {
@@ -104,11 +105,8 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
     return holder;
   }
 
-  goto(roomId): void {
+  goto(roomId,roomIdName): void {
     this.roomId = roomId;
     this.router.navigate(['/room'], { queryParams: { roomId , userId: this.userId} });
-  }
-  addItem(newItem:IDBMessage): void {
-    console.log(newItem)
   }
 }

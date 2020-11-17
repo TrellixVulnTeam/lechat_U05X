@@ -5,10 +5,10 @@
       ><span>Room ID</span>
       <input formControlName="roomId" placeholder="Type in your roomId"
     /></label> -->
-    <label class="input-sizer"
+    <!-- <label class="input-sizer"
       ><span>User ID</span>
       <input formControlName="userId" placeholder="Type in your User ID" (keyup.enter)="enter()"
-    /></label>
+    /></label> -->
     <!-- <label class="input-sizer"
       ><span>Password</span>
       <input formControlName="password" placeholder="Type in your password"
@@ -17,10 +17,15 @@
         v-model="password"
         placeholder="Type in your password"
       ></label> -->
-    <label class="input-sizer">
+    <!-- <label class="input-sizer">
       <button (click)="enter()" class="enter-btn">Enter the chatroom</button></label
-    >
+    > -->
+    <label class="input-sizer">
+      <button (click)="loginWithG()" class="enter-btn">Login with Google</button>
+    </label>
   </ng-container>
+
+  <div id="firebaseui-auth-container" class="auth-container"></div>
     <ng-template #elseTmpl>
     <label class="input-sizer">
       <button class="enter-btn" (click)="logOut()">

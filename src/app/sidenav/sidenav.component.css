@@ -15,10 +15,13 @@
   top: 0;
   z-index: 1;
 }
-.item{
-margin-top: 5vh;
+.app-class .mat-list-item {
+  height: auto;
+  margin-top: 5vh;
 }
-
+.item{
+  margin-top: 2vh;
+}
 .roomblock{
   display: flex;
   flex-direction: column;
