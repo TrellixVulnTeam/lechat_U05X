@@ -2,10 +2,10 @@
   <div class="chatroom">
     <div
       *ngFor="let message of allMessages"
-      [class]="{messages:true,messageme:message.data.userId===userId}"
+      [class]="{messages:true,messageme:message.data.uid===userUID}"
     >
       <div
-        *ngIf="message.data.userId===userId; else elseTmpl"
+        *ngIf="message.data.uid===userUID; else elseTmpl"
         class="messageblock"
       >
 
@@ -25,7 +25,7 @@
       >
         <img
           class="profile"
-          [src]="url"
+          [src]="memberDataObject[message.data.uid].avatar"
         >
         <div>
           {{message.data.userId}} <div class="message__text">{{message.data.message}}</div>

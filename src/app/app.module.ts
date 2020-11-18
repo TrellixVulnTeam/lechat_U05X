@@ -25,6 +25,8 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AuthService } from './auth/auth.service';
+import { NbThemeModule, NbLayoutModule, NbToastrModule } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 
 @NgModule({
@@ -48,7 +50,11 @@ import { AuthService } from './auth/auth.service';
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NbThemeModule.forRoot({ name: 'default' }),
+    NbLayoutModule,
+    NbEvaIconsModule,
+    NbToastrModule.forRoot()
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

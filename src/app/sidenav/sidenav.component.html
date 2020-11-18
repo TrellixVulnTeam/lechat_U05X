@@ -1,23 +1,50 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
-    <mat-toolbar routerLink="/" routerLinkActive="active"> Chatroom</mat-toolbar>
-    <mat-nav-list>
-      <ng-container *ngIf="userId">
-        <a class="item" mat-list-item routerLinkActive="active" (click)=goto(room.id) *ngFor="let room of roomList;let recordIndex = index">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar routerLink="/" routerLinkActive="active">
+      Chatroom</mat-toolbar
+    >
+    <ng-container *ngIf="isLogIn()">
+      <mat-nav-list>
+        <mat-list-item
+          class="item"
+          routerLinkActive="active"
+          (click)="goto(room.id)"
+          *ngFor="let room of roomList; let recordIndex = index"
+        >
           <div class="roomblock">
-            <ng-container *ngIf="room.data !==undefined ">
-              <div class="roomTitle">{{room.data.roomId}}</div>
-              <div  *ngIf="room.data.latest ">{{room.data.latest.data.userId}}:{{room.data.latest.data.message}}</div>
-              <div  *ngIf="room.data.latest ">{{room.data.latest.data.time | date}}</div>
-
+            <ng-container *ngIf="room.data !== undefined">
+              <div class="roomTitle">{{ room.data.roomId }}</div>
+              <div *ngIf="room.data.latest">
+                {{ room.data.latest.data.userId }}:{{
+                  room.data.latest.data.message
+                }}
+              </div>
+              <div *ngIf="room.data.latest">
+                {{ room.data.latest.data.time | date }}
+              </div>
             </ng-container>
           </div>
-        </a>
-      </ng-container>
-    </mat-nav-list>
+        </mat-list-item>
+      </mat-nav-list>
+      <mat-toolbar>Online</mat-toolbar>
+      <mat-nav-list>
+        <ng-container *ngFor="let user of online">
+          <ng-container *ngIf="user.state === 'online'">
+            <a mat-list-item>
+              <img class="profile" [src]="user.avatar" />
+              {{ user.userName }}
+            </a>
+          </ng-container>
+        </ng-container>
+      </mat-nav-list>
+    </ng-container>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
@@ -26,11 +53,16 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+        *ngIf="isHandset$ | async"
+      >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span><ng-container *ngIf="userId">Welcome back, {{userId}} @  </ng-container>
-      {{currentPage}}</span>
+      <span
+        ><ng-container *ngIf="userId"
+          >Welcome back, {{ userId }} @
+        </ng-container>
+        {{ currentPage }}</span
+      >
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

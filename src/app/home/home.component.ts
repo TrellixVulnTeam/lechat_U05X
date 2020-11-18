@@ -46,7 +46,6 @@ export class ChatLoginComponent implements OnInit {
   async loginWithG() {
     const res = await this.authService.loginWithGoogle();
     this.signInData = res;
-    console.log(this.signInData);
   }
   logOut(): void {
     this.authService.logout();
@@ -69,7 +68,7 @@ export class ChatLoginComponent implements OnInit {
       .push({
         roomId: this.myForm.value.roomId,
         public: true,
-        member: [this.authService.loggedInUserData.uid],
+        member: [this.signInData.userUID],
       });
   }
 }

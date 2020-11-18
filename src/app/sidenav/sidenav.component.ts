@@ -11,6 +11,8 @@ import { IRoom } from '../interfaces/IRoom';
 import { IDBRoom } from './../interfaces/IDBRoom';
 import { Subscription } from 'rxjs';
 import { IDBMessage } from '../interfaces/IDBMessage';
+import { PresenseService } from './../presense.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -33,28 +35,42 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
   subscription: Subscription;
   userId: string;
 
+  online: [] = [];
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private route: ActivatedRoute,
     private router: Router,
-    private commuteService: CommuteService
+    private commuteService: CommuteService,
+    private presenseService: PresenseService,
+    private authService: AuthService,
   ) {
     this.db = firebase.initializeApp(environment.firebase);
     // subscribe to home component messages
     this.subscription = this.commuteService.onMessage().subscribe((message) => {
       if (message) {
-        console.log(message);
-        this.userId = message;
+        // console.log(message);
+        this.userId = message['userInfo'];
       } else {
         // clear messages when empty message received
         this.userId = null;
-
       }
     });
+    this.subscription = this.presenseService
+      .onMessage()
+      .subscribe((message) => {
+        if (message) {
+          // const toastRef = this.toastrService.show(message,'bottom-right');
+          console.log(message);
+        } else {
+          // clear messages when empty message received
+        }
+      });
   }
 
   ngOnInit(): void {
     this.onDbRooms();
+    this.onOnline();
   }
   ngAfterContentInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -78,6 +94,21 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
       .ref('rooms/')
       .on('value', (snapshot) => {
         this.roomList = this.loader(snapshot);
+      });
+  }
+  onOnline(): void {
+    const vm =this;
+    firebase
+      .database()
+      .ref('/status/')
+      .on('value', function (snapshot) {
+        // If we're not currently connected, don't do anything.
+        const data = snapshot.val() || 'Anonymous';
+        const holder: [] = [];
+        for (const i in data) {
+          holder.push(data[i]);
+        }
+        vm.online = holder;
       });
   }
 
@@ -105,8 +136,13 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
     return holder;
   }
 
-  goto(roomId,roomIdName): void {
+  goto(roomId): void {
     this.roomId = roomId;
-    this.router.navigate(['/room'], { queryParams: { roomId , userId: this.userId} });
+    this.router.navigate(['/room'], {
+      queryParams: { roomId },
+    });
+  }
+  isLogIn(): boolean{
+    return this.authService.isLoggedIn;
   }
 }

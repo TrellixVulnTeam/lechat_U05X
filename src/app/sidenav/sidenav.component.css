@@ -32,3 +32,12 @@
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
+
+.profile{
+  border-radius: 50%;
+  height:3vh;
+}
+
+.mat-list-item {
+  height: auto;
+}
