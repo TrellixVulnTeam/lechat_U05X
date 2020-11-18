@@ -46,11 +46,11 @@ export class ChatLoginComponent implements OnInit {
   async loginWithG() {
     const res = await this.authService.loginWithGoogle();
     this.signInData = res;
-    console.log(this.signInData);
+    // console.log(this.signInData);
   }
   logOut(): void {
     this.authService.logout();
-    console.log('login', this.authService.isLoggedIn);
+    // console.log('login', this.authService.isLoggedIn);
     this.clearCommute();
   }
   sendCommute(mess): void {
@@ -63,6 +63,8 @@ export class ChatLoginComponent implements OnInit {
     this.commuteService.clearMessages();
   }
   creatRoom(): void {
+    const isTyping = {};
+    isTyping[this.authService.loggedInUserData.uid] = false;
     firebase
       .database()
       .ref('rooms/')
@@ -70,6 +72,7 @@ export class ChatLoginComponent implements OnInit {
         roomId: this.myForm.value.roomId,
         public: true,
         member: [this.authService.loggedInUserData.uid],
+        isTyping
       });
   }
 }

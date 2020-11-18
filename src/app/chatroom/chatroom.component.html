@@ -36,6 +36,24 @@
      </ng-template>
 
     </div>
+    <ng-container *ngFor="let member of memberList">
+    <ng-container *ngIf="isTyping[member] && member !==userUID">
+      <div class="messages">
+        <div class="message">
+          {{memberDataObject[member].userName}}正在輸入
+          <div class="ticontainer">
+            <div class="tiblock">
+              <div class="tidot"></div>
+              <div class="tidot"></div>
+              <div class="tidot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+
 
   </div>
   <div class="footer" *ngIf="userId">
@@ -44,7 +62,7 @@
       class="nameinput"
       placeholder="Enter your name"
     > -->
-    <input [(ngModel)]="message"  class="input" (keydown.enter)="sendMessage()">
+    <input [(ngModel)]="message"  class="input" (blur)="onBlur()" (focus)="onFocus()" (keydown.enter)="sendMessage()">
     <button
       *ngIf="message.length >0 ;else elseTmpl"
       class="send"

@@ -28,6 +28,7 @@ export class ChatroomComponent implements OnInit {
   memberList: string[];
   memberDataObject = {};
   allMessages: IDBMessage[] = [];
+  isTyping=[];
   message = '';
   url =
     'https://images.theconversation.com/files/38926/original/5cwx89t4-1389586191.jpg';
@@ -45,7 +46,7 @@ export class ChatroomComponent implements OnInit {
     this.subscription = this.commuteService.onMessage().subscribe((message) => {
       if (message) {
         this.userId = message;
-        console.log('Chatroom userId>> ', this.userId);
+        // console.log('Chatroom userId>> ', this.userId);
       } else {
         // clear messages when empty message received
       }
@@ -68,7 +69,7 @@ export class ChatroomComponent implements OnInit {
         const data = snapshot.val();
         if(!data.includes(this.userUID))
         {
-          console.log(this.userUID, ' first time enter');
+          // console.log(this.userUID, ' first time enter');
           this.addMember(data,this.userUID);
         }
         this.memberList = snapshot.val();
@@ -81,10 +82,11 @@ export class ChatroomComponent implements OnInit {
             this.memberDataObject[ele] = snapshot.val();
           });
         })
-        console.log(this.memberDataObject);
+        // console.log(this.memberDataObject);
 
       });
       this.listener();
+      this.typingListener();
     });
 
 
@@ -122,6 +124,15 @@ export class ChatroomComponent implements OnInit {
     }
     this.allMessages = holder;
   }
+  typingListener(): void {
+    const vm = this;
+    firebase
+      .database()
+      .ref('rooms/' + vm.id + '/isTyping/')
+      .on('value', (snapshot) => {
+        this.isTyping = snapshot.val();
+      });
+  }
 
   sendMessage(mess = ''): void {
     if (this.userId) {
@@ -139,9 +150,9 @@ export class ChatroomComponent implements OnInit {
         this.writeUserData(this.userId, this.message);
         this.message = '';
       }
-      console.log('child', this.allMessages[this.allMessages.length - 1]);
+      // console.log('child', this.allMessages[this.allMessages.length - 1]);
     } else {
-      console.log('No user Init');
+      // console.log('No user Init');
     }
   }
 
@@ -165,7 +176,26 @@ export class ChatroomComponent implements OnInit {
   }
   addMember(origin,newMember): void {
     const updates = {};
-    updates['rooms/' + this.id +'/member/'] = [...origin,newMember];
+    updates['rooms/' + this.id +'/member/'] = [...origin, newMember];
     firebase.database().ref().update(updates);
+    firebase
+      .database()
+      .ref('rooms/' + this.id + '/isTyping/' + newMember + '/')
+      .push(false);
+
+  }
+  onFocus(): void
+  {
+    const updates = {};
+    updates['rooms/' + this.id + '/isTyping/' + this.userUID + '/'] = true;
+    firebase.database().ref().update(updates);
+
+  }
+  onBlur(): void
+  {
+    const updates = {};
+    updates['rooms/' + this.id + '/isTyping/' + this.userUID + '/'] = false;
+    firebase.database().ref().update(updates);
+
   }
 }
