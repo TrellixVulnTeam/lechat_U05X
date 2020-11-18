@@ -35,7 +35,7 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
   subscription: Subscription;
   userId: string;
 
-  online: [] = [];
+  online = [];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -104,7 +104,7 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
       .on('value', function (snapshot) {
         // If we're not currently connected, don't do anything.
         const data = snapshot.val() || 'Anonymous';
-        const holder: [] = [];
+        const holder = [];
         for (const i in data) {
           holder.push(data[i]);
         }

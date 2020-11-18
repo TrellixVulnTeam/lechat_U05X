@@ -2,17 +2,18 @@ import { async } from '@angular/core/testing';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { CommuteService } from './../commute.service';
+import { CommuteService } from '../commute.service';
 import { AuthService } from '../auth/auth.service';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
+
 @Component({
-  selector: 'app-chat-login',
-  templateUrl: './chat-login.component.html',
-  styleUrls: ['./chat-login.component.css'],
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
 })
-export class ChatLoginComponent implements OnInit {
+export class HomeComponent implements OnInit {
   myForm: FormGroup;
   signInData: object;
   constructor(
@@ -68,7 +69,7 @@ export class ChatLoginComponent implements OnInit {
       .push({
         roomId: this.myForm.value.roomId,
         public: true,
-        member: [this.signInData.userUID],
+        member: [this.authService.loggedInUserData.uid],
       });
   }
 }

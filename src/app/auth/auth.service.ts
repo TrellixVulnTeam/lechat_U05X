@@ -6,6 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import firebase from 'firebase/app';
 import { CommuteService } from './../commute.service';
 import { PresenseService } from './../presense.service';
+import { IloggedInUserData } from '../interfaces/IloggedInUserData';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,7 @@ export class AuthService {
       if (user) {
         this.user = user;
         sessionStorage.setItem('user', JSON.stringify(this.user));
-        if(this.isLoggedIn){
+        if (this.isLoggedIn) {
           this.log();
         }
       } else {
@@ -68,9 +69,11 @@ export class AuthService {
     const user = JSON.parse(sessionStorage.getItem('user'));
     return user !== null;
   }
-  get loggedInUserData(): object {
-    const {uid, displayName, photoURL } = JSON.parse(sessionStorage.getItem('user'));
-    return {uid,userName:displayName,avatar:photoURL};
+  get loggedInUserData(): IloggedInUserData {
+    const { uid, displayName, photoURL } = JSON.parse(
+      sessionStorage.getItem('user')
+    );
+    return { uid, userName: displayName, avatar: photoURL };
   }
   async loginWithGoogle() {
     const res = await this.afAuth.signInWithPopup(
@@ -79,7 +82,7 @@ export class AuthService {
     if (res) {
       const userUID = res.user['uid'];
       const userPic = res.user['photoURL'];
-      console.log('login success ',res.user, userUID, userPic);
+      console.log('login success ', res.user, userUID, userPic);
       const userInfo = res.additionalUserInfo.profile['name'];
       this.sendCommute({ userInfo, userUID, userPic });
       this.loginData = res;
@@ -125,7 +128,7 @@ export class AuthService {
     // Create a reference to the special '.info/connected' path in
     // Realtime Database. This path returns `true` when connected
     // and `false` when disconnected.
-    const vm =this;
+    const vm = this;
     firebase
       .database()
       .ref('.info/connected')
@@ -134,7 +137,7 @@ export class AuthService {
         if (snapshot.val() == false) {
           return;
         }
-        vm.presenseService.sendMessage( vm.user.displayName +' is online!');
+        vm.presenseService.sendMessage(vm.user.displayName + ' is online!');
 
         // If we are currently connected, then use the 'onDisconnect()'
         // method to add a set which will only trigger once this
