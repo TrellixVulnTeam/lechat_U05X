@@ -41,3 +41,10 @@
 .mat-list-item {
   height: auto;
 }
+
+.onlineIcon{
+  background: #44be68;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+}

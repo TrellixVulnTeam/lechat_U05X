@@ -82,7 +82,7 @@ export class AuthService {
     if (res) {
       const userUID = res.user['uid'];
       const userPic = res.user['photoURL'];
-      console.log('login success ', res.user, userUID, userPic);
+      // console.log('login success ', res.user, userUID, userPic);
       const userInfo = res.additionalUserInfo.profile['name'];
       this.sendCommute({ userInfo, userUID, userPic });
       this.loginData = res;

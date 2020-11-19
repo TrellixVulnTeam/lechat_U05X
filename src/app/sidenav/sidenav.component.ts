@@ -43,7 +43,7 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
     private router: Router,
     private commuteService: CommuteService,
     private presenseService: PresenseService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     this.db = firebase.initializeApp(environment.firebase);
     // subscribe to home component messages
@@ -61,7 +61,7 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
       .subscribe((message) => {
         if (message) {
           // const toastRef = this.toastrService.show(message,'bottom-right');
-          console.log(message);
+          // console.log(message);
         } else {
           // clear messages when empty message received
         }
@@ -71,16 +71,18 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
   ngOnInit(): void {
     this.onDbRooms();
     this.onOnline();
-  }
-  ngAfterContentInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.roomId = params.roomId;
+    this.route.params.subscribe((params) => {
+      console.log('sidenav',params.uid)
+      this.roomId = params.uid;
       if (this.roomId !== undefined) {
         this.currentPage = this.roomId;
       } else {
         this.currentPage = 'Le Chat';
       }
     });
+  }
+  ngAfterContentInit(): void {
+
   }
   ngOnDestroy(): void {
     // unsubscribe to ensure no memory leaks
@@ -97,7 +99,7 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
       });
   }
   onOnline(): void {
-    const vm =this;
+    const vm = this;
     firebase
       .database()
       .ref('/status/')
@@ -106,9 +108,10 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
         const data = snapshot.val() || 'Anonymous';
         const holder = [];
         for (const i in data) {
-          holder.push(data[i]);
+          holder.push({uid:i,data:data[i]});
         }
         vm.online = holder;
+        console.log(vm.online)
       });
   }
 
@@ -138,11 +141,41 @@ export class SidenavComponent implements OnInit, AfterContentInit, OnDestroy {
 
   goto(roomId): void {
     this.roomId = roomId;
-    this.router.navigate(['/room'], {
-      queryParams: { roomId },
-    });
+    this.router.navigate(['/t',roomId]);
   }
-  isLogIn(): boolean{
+  isLogIn(): boolean {
     return this.authService.isLoggedIn;
+  }
+  goToRoom(otherUserUID): void {
+    const vm = this;
+    const userData = this.authService.loggedInUserData;
+    const roomUID = [userData.uid, otherUserUID].sort().join('');
+    firebase
+      .database()
+      .ref('roomList/' + userData.uid + '/' + roomUID + '/')
+      .once('value', function (snapshot) {
+        if (!snapshot.val()) {
+
+          firebase
+            .database()
+            .ref('roomList/' + userData.uid + '/'+ roomUID + '/')
+            .set([roomUID]);
+            console.log(snapshot.val(),userData.uid,otherUserUID,roomUID);
+
+          const isTyping = {};
+          isTyping[userData.uid] = false;
+          firebase
+            .database()
+            .ref('privateRooms/' + roomUID + '/')
+            .set({
+              roomId: [userData.uid, otherUserUID],
+              type: 'DM',
+              member: [userData.uid, otherUserUID],
+              isTyping,
+              public: false
+            });
+        }
+        vm.goto(roomUID);
+      });
   }
 }

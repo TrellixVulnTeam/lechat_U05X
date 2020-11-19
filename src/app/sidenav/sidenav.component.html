@@ -15,7 +15,7 @@
         <mat-list-item
           class="item"
           routerLinkActive="active"
-          (click)="goto(room.id)"
+          [routerLink]="['/room', room.id]"
           *ngFor="let room of roomList; let recordIndex = index"
         >
           <div class="roomblock">
@@ -36,13 +36,14 @@
       <mat-toolbar>Online</mat-toolbar>
       <mat-nav-list>
         <ng-container *ngFor="let user of online">
-          <ng-container *ngIf="user.state === 'online'">
-            <a mat-list-item>
-              <img class="profile" [src]="user.avatar" />
-              {{ user.userName }}
-            </a>
+            <mat-list-item
+            (click)="goToRoom(user.uid)"
+            >
+              <img class="profile" [src]="user.data.avatar" />
+              <div>{{ user.data.userName }}{{user.data.last_changed| date :'shortTime'}}</div>
+              <span class="onlineIcon" *ngIf="user.data.state === 'online'"></span>
+            </mat-list-item>
           </ng-container>
-        </ng-container>
       </mat-nav-list>
     </ng-container>
   </mat-sidenav>

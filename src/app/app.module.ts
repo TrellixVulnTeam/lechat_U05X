@@ -16,6 +16,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { ChatroomComponent } from './chatroom/chatroom.component';
+import { PrivateChatroomComponent } from './private-chatroom/private-chatroom.component';
+
 import { environment } from '../environments/environment';
 
 import { AngularFireModule } from '@angular/fire';
@@ -25,7 +27,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AuthService } from './auth/auth.service';
-import { NbThemeModule, NbLayoutModule, NbToastrModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbToastrModule, NbChatModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 
@@ -34,7 +36,8 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     AppComponent,
     ChatLoginComponent,
     SidenavComponent,
-    ChatroomComponent
+    ChatroomComponent,
+    PrivateChatroomComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,8 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbThemeModule.forRoot({ name: 'default' }),
     NbLayoutModule,
     NbEvaIconsModule,
-    NbToastrModule.forRoot()
+    NbToastrModule.forRoot(),
+    NbChatModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

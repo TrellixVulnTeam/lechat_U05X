@@ -13,22 +13,22 @@ import { AngularFireModule, FirebaseApp } from '@angular/fire';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { IMessage } from '../interfaces/IMessage';
 import { IDBMessage } from '../interfaces/IDBMessage';
-import { CommuteService } from './../commute.service';
+import { CommuteService } from '../commute.service';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
-  selector: 'app-chatroom',
-  templateUrl: './chatroom.component.html',
-  styleUrls: ['./chatroom.component.css'],
+  selector: 'app-private-chatroom',
+  templateUrl: './private-chatroom.component.html',
+  styleUrls: ['./private-chatroom.component.css'],
 })
-export class ChatroomComponent implements OnInit {
+export class PrivateChatroomComponent implements OnInit {
   id: string;
   userId: string;
   userUID: string;
   memberList: string[];
   memberDataObject = {};
   allMessages: IDBMessage[] = [];
-  isTyping=[];
+  isTyping = [];
   message = '';
   url =
     'https://images.theconversation.com/files/38926/original/5cwx89t4-1389586191.jpg';
@@ -63,34 +63,29 @@ export class ChatroomComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.id = params.uid;
       firebase
-      .database()
-      .ref('rooms/' + this.id + '/member/')
-      .on('value', (snapshot) => {
-        const data = snapshot.val();
-        if(!data.includes(this.userUID))
-        {
-          // console.log(this.userUID, ' first time enter');
-          this.addMember(data, this.userUID);
-        }
-        this.memberList = snapshot.val();
-        this.memberList.forEach(ele => {
-          firebase
-          .database()
-          .ref('status/' + ele + '/' )
-          .once('value', (snapshot) => {
-            const obj = {}
-            this.memberDataObject[ele] = snapshot.val();
+        .database()
+        .ref('privateRooms/' + this.id + '/member/')
+        .on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (!data.includes(this.userUID)) {
+            // console.log(this.userUID, ' first time enter');
+            this.addMember(data, this.userUID);
+          }
+          this.memberList = snapshot.val();
+          this.memberList.forEach((ele) => {
+            firebase
+              .database()
+              .ref('status/' + ele + '/')
+              .once('value', (snapshot) => {
+                this.memberDataObject[ele] = snapshot.val();
+              });
           });
-        })
-        console.log(this.memberDataObject);
-
-      });
+          console.log(this.memberDataObject);
+        });
       this.listener();
       this.typingListener();
     });
 
-
-    // this.listener();
 
     const container = document.querySelector('.chatroom');
     const observer = new MutationObserver((mutations) => {
@@ -110,12 +105,12 @@ export class ChatroomComponent implements OnInit {
     const vm = this;
     firebase
       .database()
-      .ref('rooms/' + vm.id + '/messages/')
+      .ref('privateRooms/' + vm.id + '/messages/')
       .on('value', (snapshot) => {
         vm.loader(snapshot);
       });
   }
-  loader(snapshot) {
+  loader(snapshot): void {
     const data: IDBMessage = snapshot.val();
     const holder: IDBMessage[] = [];
     for (const i in data) {
@@ -128,7 +123,7 @@ export class ChatroomComponent implements OnInit {
     const vm = this;
     firebase
       .database()
-      .ref('rooms/' + vm.id + '/isTyping/')
+      .ref('privateRooms/' + vm.id + '/isTyping/')
       .on('value', (snapshot) => {
         this.isTyping = snapshot.val();
       });
@@ -160,42 +155,39 @@ export class ChatroomComponent implements OnInit {
     const time = new Date().toLocaleString();
     firebase
       .database()
-      .ref('rooms/' + this.id + '/messages/')
+      .ref('privateRooms/' + this.id + '/messages/')
       .push({
         userId,
         uid: this.userUID,
         message,
         time,
       });
-      this.updateLatestMes();
+    this.updateLatestMes();
   }
-  updateLatestMes() {
+  updateLatestMes(): void {
     const updates = {};
-    updates['rooms/' + this.id + '/latest/'] = this.allMessages[this.allMessages.length - 1];
+    updates['privateRooms/' + this.id + '/latest/'] = this.allMessages[
+      this.allMessages.length - 1
+    ];
     firebase.database().ref().update(updates);
   }
-  addMember(origin,newMember): void {
+  addMember(origin, newMember): void {
     const updates = {};
-    updates['rooms/' + this.id +'/member/'] = [...origin, newMember];
+    updates['privateRooms/' + this.id + '/member/'] = [...origin, newMember];
     firebase.database().ref().update(updates);
     firebase
       .database()
-      .ref('rooms/' + this.id + '/isTyping/' + newMember + '/')
+      .ref('privateRooms/' + this.id + '/isTyping/' + newMember + '/')
       .push(false);
-
   }
-  onFocus(): void
-  {
+  onFocus(): void {
     const updates = {};
-    updates['rooms/' + this.id + '/isTyping/' + this.userUID + '/'] = true;
+    updates['privateRooms/' + this.id + '/isTyping/' + this.userUID + '/'] = true;
     firebase.database().ref().update(updates);
-
   }
-  onBlur(): void
-  {
+  onBlur(): void {
     const updates = {};
-    updates['rooms/' + this.id + '/isTyping/' + this.userUID + '/'] = false;
+    updates['privateRooms/' + this.id + '/isTyping/' + this.userUID + '/'] = false;
     firebase.database().ref().update(updates);
-
   }
 }
